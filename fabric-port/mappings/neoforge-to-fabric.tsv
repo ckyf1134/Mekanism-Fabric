@@ -1,0 +1,301 @@
+# NeoForge -> Fabric/shim class mapping table (TSV: old_fqcn, new_fqcn, [mode])
+# Rule: shim classes keep the NeoForge simple name so only import lines change.
+# Phase 1 "easy" mappings — extended as phases land.
+
+# --- loader / environment ---
+net.neoforged.fml.ModList	mekanism.fabric_shim.fml.ModList
+net.neoforged.fml.loading.FMLEnvironment	mekanism.fabric_shim.fml.FMLEnvironment
+net.neoforged.api.distmarker.Dist	mekanism.fabric_shim.distmarker.Dist
+net.neoforged.api.distmarker.OnlyIn	mekanism.fabric_shim.distmarker.OnlyIn
+
+# --- fake player (Fabric API ships one; shim adapts constructor surface) ---
+net.neoforged.neoforge.common.util.FakePlayer	mekanism.fabric_shim.util.FakePlayer
+
+# --- server lifecycle ---
+net.neoforged.neoforge.server.ServerLifecycleHooks	mekanism.fabric_shim.server.ServerLifecycleHooks
+
+# --- event bus: NO remap needed ---
+# net.neoforged.bus.api.* (IEventBus/Event/EventPriority/SubscribeEvent/ICancellableEvent) stays
+# unchanged: the port depends on NeoForge's standalone bus library (net.neoforged:bus, JiJ'd).
+
+# --- registries (Phase 1: shim replays the NeoForge registration lifecycle on the mod bus) ---
+net.neoforged.neoforge.registries.DeferredRegister	mekanism.fabric_shim.registries.DeferredRegister
+net.neoforged.neoforge.registries.DeferredHolder	mekanism.fabric_shim.registries.DeferredHolder
+net.neoforged.neoforge.registries.RegistryBuilder	mekanism.fabric_shim.registries.RegistryBuilder
+net.neoforged.neoforge.registries.RegisterEvent	mekanism.fabric_shim.registries.RegisterEvent
+net.neoforged.neoforge.registries.NewRegistryEvent	mekanism.fabric_shim.registries.NewRegistryEvent
+net.neoforged.fml.event.IModBusEvent	mekanism.fabric_shim.fml.event.IModBusEvent
+
+# --- game event bus holder ---
+net.neoforged.neoforge.common.NeoForge	mekanism.fabric_shim.common.NeoForge
+
+# --- fluids: Mekanism-owned FluidStack (mB amounts internally; droplet conversion only at the
+#     Phase 2 transfer-API boundary). Serialized formats match NeoForge's byte-for-byte. ---
+net.neoforged.neoforge.fluids.FluidStack	mekanism.fabric_shim.fluids.FluidStack
+net.neoforged.neoforge.fluids.IFluidTank	mekanism.fabric_shim.fluids.IFluidTank
+net.neoforged.neoforge.fluids.capability.IFluidHandler	mekanism.fabric_shim.fluids.capability.IFluidHandler
+# FluidType (data holder) + BaseFlowingFluid (configurable FlowingFluid); FluidType registered under
+# neoforge:fluid_type. FluidType-based accessors reach vanilla Fluid/FluidState via interface injection.
+net.neoforged.neoforge.fluids.FluidType	mekanism.fabric_shim.fluids.FluidType
+net.neoforged.neoforge.fluids.BaseFlowingFluid	mekanism.fabric_shim.fluids.BaseFlowingFluid
+net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions	mekanism.fabric_shim.client.extensions.IClientFluidTypeExtensions
+
+# --- small common/util shims ---
+net.neoforged.neoforge.common.util.INBTSerializable	mekanism.fabric_shim.common.util.INBTSerializable
+net.neoforged.neoforge.common.util.TriPredicate	mekanism.fabric_shim.common.util.TriPredicate
+net.neoforged.neoforge.common.util.NeoForgeExtraCodecs	mekanism.fabric_shim.common.util.NeoForgeExtraCodecs
+net.neoforged.neoforge.common.TranslatableEnum	mekanism.fabric_shim.common.TranslatableEnum
+net.neoforged.neoforge.common.MutableDataComponentHolder	mekanism.fabric_shim.common.MutableDataComponentHolder
+net.neoforged.neoforge.common.ItemAbility	mekanism.fabric_shim.common.ItemAbility
+net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs	mekanism.fabric_shim.network.codec.NeoForgeStreamCodecs
+# networking funnel surface (all Mekanism packets flow through PacketHandler/BasePacketHandler):
+# codec registration + serverbound receivers go live; clientbound/config receivers parked (Phase 3/4)
+net.neoforged.neoforge.network.handling.IPayloadContext	mekanism.fabric_shim.network.handling.IPayloadContext
+net.neoforged.neoforge.network.handling.IPayloadHandler	mekanism.fabric_shim.network.handling.IPayloadHandler
+net.neoforged.neoforge.network.registration.PayloadRegistrar	mekanism.fabric_shim.network.registration.PayloadRegistrar
+net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent	mekanism.fabric_shim.network.event.RegisterPayloadHandlersEvent
+net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent	mekanism.fabric_shim.network.event.RegisterConfigurationTasksEvent
+net.neoforged.neoforge.network.configuration.ICustomConfigurationTask	mekanism.fabric_shim.network.configuration.ICustomConfigurationTask
+net.neoforged.neoforge.network.PacketDistributor	mekanism.fabric_shim.network.PacketDistributor
+net.neoforged.neoforge.network.IContainerFactory	mekanism.fabric_shim.network.IContainerFactory
+net.neoforged.fml.LogicalSide	mekanism.fabric_shim.fml.LogicalSide
+
+# --- capabilities: tokens over Fabric API Lookup (registration/queries wired in Phase 2) ---
+net.neoforged.neoforge.capabilities.BlockCapability	mekanism.fabric_shim.capabilities.BlockCapability
+net.neoforged.neoforge.capabilities.ItemCapability	mekanism.fabric_shim.capabilities.ItemCapability
+net.neoforged.neoforge.capabilities.EntityCapability	mekanism.fabric_shim.capabilities.EntityCapability
+
+# --- item handlers (simulate-based internal contract; Phase 2 bridges at boundary) ---
+net.neoforged.neoforge.items.IItemHandler	mekanism.fabric_shim.items.IItemHandler
+net.neoforged.neoforge.items.IItemHandlerModifiable	mekanism.fabric_shim.items.IItemHandlerModifiable
+
+# --- data maps (types + store now; datapack loader lands Phase 3) ---
+net.neoforged.neoforge.registries.datamaps.DataMapType	mekanism.fabric_shim.registries.datamaps.DataMapType
+net.neoforged.neoforge.registries.datamaps.IWithData	mekanism.fabric_shim.registries.datamaps.IWithData
+net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent	mekanism.fabric_shim.registries.datamaps.RegisterDataMapTypesEvent
+net.neoforged.neoforge.registries.datamaps.DataMapsUpdatedEvent	mekanism.fabric_shim.registries.datamaps.DataMapsUpdatedEvent
+net.neoforged.neoforge.registries.DataPackRegistryEvent	mekanism.fabric_shim.registries.DataPackRegistryEvent
+
+# --- events (game-bus glue fires these in Phase 3; classes compile-ready now) ---
+net.neoforged.neoforge.event.entity.EntityEvent	mekanism.fabric_shim.event.entity.EntityEvent
+net.neoforged.neoforge.event.entity.EntityTeleportEvent	mekanism.fabric_shim.event.entity.EntityTeleportEvent
+net.neoforged.neoforge.event.ItemAttributeModifierEvent	mekanism.fabric_shim.event.ItemAttributeModifierEvent
+
+# --- ingredients: NeoForge-format JSON via shim codecs; bridged into Fabric's custom-ingredient
+#     system (registered under NeoForge's type ids) for vanilla recipe slots + network sync ---
+net.neoforged.neoforge.common.crafting.SizedIngredient	mekanism.fabric_shim.common.crafting.SizedIngredient
+net.neoforged.neoforge.common.crafting.ICustomIngredient	mekanism.fabric_shim.common.crafting.ICustomIngredient
+net.neoforged.neoforge.common.crafting.IngredientType	mekanism.fabric_shim.common.crafting.IngredientType
+net.neoforged.neoforge.common.crafting.CompoundIngredient	mekanism.fabric_shim.common.crafting.CompoundIngredient
+net.neoforged.neoforge.common.crafting.DifferenceIngredient	mekanism.fabric_shim.common.crafting.DifferenceIngredient
+net.neoforged.neoforge.common.crafting.DataComponentIngredient	mekanism.fabric_shim.common.crafting.DataComponentIngredient
+net.neoforged.neoforge.common.conditions.ICondition	mekanism.fabric_shim.common.conditions.ICondition
+net.neoforged.neoforge.fluids.FluidStackLinkedSet	mekanism.fabric_shim.fluids.FluidStackLinkedSet
+net.neoforged.neoforge.fluids.crafting.FluidIngredient	mekanism.fabric_shim.fluids.crafting.FluidIngredient
+net.neoforged.neoforge.fluids.crafting.FluidIngredientType	mekanism.fabric_shim.fluids.crafting.FluidIngredientType
+net.neoforged.neoforge.fluids.crafting.SingleFluidIngredient	mekanism.fabric_shim.fluids.crafting.SingleFluidIngredient
+net.neoforged.neoforge.fluids.crafting.TagFluidIngredient	mekanism.fabric_shim.fluids.crafting.TagFluidIngredient
+net.neoforged.neoforge.fluids.crafting.EmptyFluidIngredient	mekanism.fabric_shim.fluids.crafting.EmptyFluidIngredient
+net.neoforged.neoforge.fluids.crafting.CompoundFluidIngredient	mekanism.fabric_shim.fluids.crafting.CompoundFluidIngredient
+net.neoforged.neoforge.fluids.crafting.DataComponentFluidIngredient	mekanism.fabric_shim.fluids.crafting.DataComponentFluidIngredient
+net.neoforged.neoforge.fluids.crafting.SizedFluidIngredient	mekanism.fabric_shim.fluids.crafting.SizedFluidIngredient
+
+# --- FML lifecycle + IMC ---
+net.neoforged.fml.event.lifecycle.ParallelDispatchEvent	mekanism.fabric_shim.fml.event.lifecycle.ParallelDispatchEvent
+net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent	mekanism.fabric_shim.fml.event.lifecycle.FMLCommonSetupEvent
+net.neoforged.fml.event.lifecycle.FMLClientSetupEvent	mekanism.fabric_shim.fml.event.lifecycle.FMLClientSetupEvent
+net.neoforged.fml.event.lifecycle.InterModEnqueueEvent	mekanism.fabric_shim.fml.event.lifecycle.InterModEnqueueEvent
+net.neoforged.fml.event.lifecycle.InterModProcessEvent	mekanism.fabric_shim.fml.event.lifecycle.InterModProcessEvent
+net.neoforged.fml.InterModComms	mekanism.fabric_shim.fml.InterModComms
+
+# --- config ---
+# Mostly NO remap needed: Forge Config API Port (Fabric) provides net.neoforged.fml.config.*
+# (ModConfig, IConfigSpec) and net.neoforged.neoforge.common.ModConfigSpec under their original
+# package names. The ModContainer shim routes registerConfig through FCAP's NeoForgeConfigRegistry
+# and bridges FCAP's config callbacks onto the shim mod bus as ModConfigEvents.
+net.neoforged.fml.event.config.ModConfigEvent	mekanism.fabric_shim.fml.event.config.ModConfigEvent
+
+# --- FML runtime (entry point, environment, versions) ---
+net.neoforged.fml.common.Mod	mekanism.fabric_shim.fml.Mod
+net.neoforged.fml.ModContainer	mekanism.fabric_shim.fml.ModContainer
+net.neoforged.fml.loading.FMLPaths	mekanism.fabric_shim.fml.FMLPaths
+net.neoforged.fml.common.EventBusSubscriber	mekanism.fabric_shim.fml.common.EventBusSubscriber
+net.neoforged.fml.util.thread.EffectiveSide	mekanism.fabric_shim.fml.EffectiveSide
+org.apache.maven.artifact.versioning.ArtifactVersion	mekanism.fabric_shim.fml.ArtifactVersion
+org.apache.maven.artifact.versioning.ComparableVersion	mekanism.fabric_shim.fml.ComparableVersion
+
+# --- game events: server lifecycle / level / tags / commands / reload ---
+net.neoforged.neoforge.event.server.ServerLifecycleEvent	mekanism.fabric_shim.event.server.ServerLifecycleEvent
+net.neoforged.neoforge.event.server.ServerAboutToStartEvent	mekanism.fabric_shim.event.server.ServerAboutToStartEvent
+net.neoforged.neoforge.event.server.ServerStartingEvent	mekanism.fabric_shim.event.server.ServerStartingEvent
+net.neoforged.neoforge.event.server.ServerStartedEvent	mekanism.fabric_shim.event.server.ServerStartedEvent
+net.neoforged.neoforge.event.server.ServerStoppingEvent	mekanism.fabric_shim.event.server.ServerStoppingEvent
+net.neoforged.neoforge.event.server.ServerStoppedEvent	mekanism.fabric_shim.event.server.ServerStoppedEvent
+net.neoforged.neoforge.event.level.LevelEvent	mekanism.fabric_shim.event.level.LevelEvent
+net.neoforged.neoforge.event.TagsUpdatedEvent	mekanism.fabric_shim.event.TagsUpdatedEvent
+net.neoforged.neoforge.event.RegisterCommandsEvent	mekanism.fabric_shim.event.RegisterCommandsEvent
+net.neoforged.neoforge.event.AddReloadListenerEvent	mekanism.fabric_shim.event.AddReloadListenerEvent
+
+# --- chunk ticket controllers ---
+net.neoforged.neoforge.common.world.chunk.TicketController	mekanism.fabric_shim.common.world.chunk.TicketController
+net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent	mekanism.fabric_shim.common.world.chunk.RegisterTicketControllersEvent
+net.neoforged.neoforge.common.world.chunk.TicketHelper	mekanism.fabric_shim.common.world.chunk.TicketHelper
+net.neoforged.neoforge.common.world.chunk.TicketSet	mekanism.fabric_shim.common.world.chunk.TicketSet
+net.neoforged.neoforge.common.world.chunk.LoadingValidationCallback	mekanism.fabric_shim.common.world.chunk.LoadingValidationCallback
+
+# --- NeoForge-owned registries, attachments, misc common ---
+net.neoforged.neoforge.common.NeoForgeMod	mekanism.fabric_shim.common.NeoForgeMod
+net.neoforged.neoforge.registries.NeoForgeRegistries	mekanism.fabric_shim.registries.NeoForgeRegistries
+net.neoforged.neoforge.attachment.AttachmentType	mekanism.fabric_shim.attachment.AttachmentType
+
+# --- energy (compile surface; live interop is team-reborn, Phase 2) ---
+net.neoforged.neoforge.energy.IEnergyStorage	mekanism.fabric_shim.energy.IEnergyStorage
+
+# --- Phase 1f Step 4: trivial shim batch ---
+net.neoforged.neoforge.common.util.Lazy	mekanism.fabric_shim.common.util.Lazy
+net.neoforged.neoforge.fluids.capability.IFluidHandlerItem	mekanism.fabric_shim.fluids.capability.IFluidHandlerItem
+net.neoforged.neoforge.common.ItemAbilities	mekanism.fabric_shim.common.ItemAbilities
+net.neoforged.neoforge.client.model.data.ModelData	mekanism.fabric_shim.client.model.data.ModelData
+net.neoforged.neoforge.client.model.data.ModelProperty	mekanism.fabric_shim.client.model.data.ModelProperty
+net.neoforged.neoforge.common.util.TriState	mekanism.fabric_shim.common.util.TriState
+net.neoforged.neoforge.common.SoundActions	mekanism.fabric_shim.common.SoundActions
+net.neoforged.neoforge.common.SoundAction	mekanism.fabric_shim.common.SoundAction
+net.neoforged.neoforge.common.util.FriendlyByteBufUtil	mekanism.fabric_shim.common.util.FriendlyByteBufUtil
+net.neoforged.neoforge.common.UsernameCache	mekanism.fabric_shim.common.UsernameCache
+net.neoforged.neoforge.items.ItemHandlerHelper	mekanism.fabric_shim.items.ItemHandlerHelper
+net.neoforged.neoforge.common.util.RecipeMatcher	mekanism.fabric_shim.common.util.RecipeMatcher
+net.neoforged.neoforge.common.util.ItemStackMap	mekanism.fabric_shim.common.util.ItemStackMap
+net.neoforged.neoforge.common.Tags	mekanism.fabric_shim.common.Tags
+net.neoforged.neoforge.common.CommonHooks	mekanism.fabric_shim.common.CommonHooks
+net.neoforged.neoforge.event.EventHooks	mekanism.fabric_shim.event.EventHooks
+net.neoforged.neoforge.event.level.BlockEvent	mekanism.fabric_shim.event.level.BlockEvent
+net.neoforged.neoforge.common.util.BlockSnapshot	mekanism.fabric_shim.common.util.BlockSnapshot
+net.neoforged.neoforge.event.entity.player.PlayerEvent	mekanism.fabric_shim.event.entity.player.PlayerEvent
+net.neoforged.neoforge.event.entity.living.LivingEvent	mekanism.fabric_shim.event.entity.living.LivingEvent
+net.neoforged.neoforge.event.entity.living.LivingShieldBlockEvent	mekanism.fabric_shim.event.entity.living.LivingShieldBlockEvent
+net.neoforged.neoforge.common.damagesource.DamageContainer	mekanism.fabric_shim.common.damagesource.DamageContainer
+net.neoforged.neoforge.event.entity.ProjectileImpactEvent	mekanism.fabric_shim.event.entity.ProjectileImpactEvent
+net.neoforged.neoforge.event.level.ExplosionEvent	mekanism.fabric_shim.event.level.ExplosionEvent
+net.neoforged.neoforge.event.entity.EntityStruckByLightningEvent	mekanism.fabric_shim.event.entity.EntityStruckByLightningEvent
+# Step 5.4: remaining game-bus event classes (compile surfaces; firing is Phase 3, see hook-wiring checklist)
+net.neoforged.neoforge.event.tick.ServerTickEvent	mekanism.fabric_shim.event.tick.ServerTickEvent
+net.neoforged.neoforge.event.tick.LevelTickEvent	mekanism.fabric_shim.event.tick.LevelTickEvent
+net.neoforged.neoforge.event.tick.PlayerTickEvent	mekanism.fabric_shim.event.tick.PlayerTickEvent
+net.neoforged.neoforge.event.tick.EntityTickEvent	mekanism.fabric_shim.event.tick.EntityTickEvent
+net.neoforged.neoforge.event.entity.player.PlayerInteractEvent	mekanism.fabric_shim.event.entity.player.PlayerInteractEvent
+net.neoforged.neoforge.event.entity.living.LivingDeathEvent	mekanism.fabric_shim.event.entity.living.LivingDeathEvent
+net.neoforged.neoforge.event.entity.living.LivingFallEvent	mekanism.fabric_shim.event.entity.living.LivingFallEvent
+net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent	mekanism.fabric_shim.event.entity.living.LivingIncomingDamageEvent
+net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent	mekanism.fabric_shim.event.entity.EntityInvulnerabilityCheckEvent
+net.neoforged.neoforge.event.entity.EntityJoinLevelEvent	mekanism.fabric_shim.event.entity.EntityJoinLevelEvent
+net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent	mekanism.fabric_shim.event.entity.RegisterSpawnPlacementsEvent
+net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent	mekanism.fabric_shim.event.entity.EntityAttributeCreationEvent
+net.neoforged.neoforge.event.level.ChunkTicketLevelUpdatedEvent	mekanism.fabric_shim.event.level.ChunkTicketLevelUpdatedEvent
+net.neoforged.neoforge.event.level.ChunkEvent	mekanism.fabric_shim.event.level.ChunkEvent
+net.neoforged.neoforge.event.level.ChunkDataEvent	mekanism.fabric_shim.event.level.ChunkDataEvent
+net.neoforged.neoforge.event.level.BlockDropsEvent	mekanism.fabric_shim.event.level.BlockDropsEvent
+net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent	mekanism.fabric_shim.event.BuildCreativeModeTabContentsEvent
+net.neoforged.neoforge.event.OnDatapackSyncEvent	mekanism.fabric_shim.event.OnDatapackSyncEvent
+net.neoforged.neoforge.event.ModifyDefaultComponentsEvent	mekanism.fabric_shim.event.ModifyDefaultComponentsEvent
+# Step 6 residue: standalone NeoForge classes Mekanism references (compile surfaces)
+net.neoforged.neoforge.common.IShearable	mekanism.fabric_shim.common.IShearable
+net.neoforged.neoforge.common.EffectCure	mekanism.fabric_shim.common.EffectCure
+net.neoforged.neoforge.common.EffectCures	mekanism.fabric_shim.common.EffectCures
+net.neoforged.neoforge.common.DeferredSpawnEggItem	mekanism.fabric_shim.common.DeferredSpawnEggItem
+net.neoforged.neoforge.common.world.BiomeModifier	mekanism.fabric_shim.common.world.BiomeModifier
+net.neoforged.neoforge.common.world.StructureModifier	mekanism.fabric_shim.common.world.StructureModifier
+net.neoforged.neoforge.entity.IEntityWithComplexSpawn	mekanism.fabric_shim.entity.IEntityWithComplexSpawn
+net.neoforged.neoforge.entity.PartEntity	mekanism.fabric_shim.entity.PartEntity
+net.neoforged.neoforge.registries.holdersets.AnyHolderSet	mekanism.fabric_shim.registries.holdersets.AnyHolderSet
+# Step 6 client seams: RESOLVED by Phase 4 step 6 (2026-07-23) — the 16 stub rows were reversed
+# tree-wide and deleted with src/fabric_client_stub; common code now imports mekanism.client.*
+# directly (server-safety via upstream's own lazy-classloading guards).
+# Step 6 integration seams: excluded Curios/Computer integration referenced by core (Phase 5 stubs)
+mekanism.common.integration.curios.CuriosIntegration	mekanism.fabric_shim.integration.curios.CuriosIntegration
+mekanism.common.integration.computer.ComputerCapabilityHelper	mekanism.fabric_shim.integration.computer.ComputerCapabilityHelper
+net.neoforged.neoforge.server.permission.PermissionAPI	mekanism.fabric_shim.server.permission.PermissionAPI
+net.neoforged.neoforge.server.permission.events.PermissionGatherEvent	mekanism.fabric_shim.server.permission.events.PermissionGatherEvent
+net.neoforged.neoforge.server.permission.nodes.PermissionNode	mekanism.fabric_shim.server.permission.nodes.PermissionNode
+net.neoforged.neoforge.server.permission.nodes.PermissionTypes	mekanism.fabric_shim.server.permission.nodes.PermissionTypes
+net.neoforged.neoforge.server.permission.nodes.PermissionType	mekanism.fabric_shim.server.permission.nodes.PermissionType
+net.neoforged.neoforge.server.permission.nodes.PermissionDynamicContextKey	mekanism.fabric_shim.server.permission.nodes.PermissionDynamicContextKey
+net.neoforged.neoforge.server.permission.nodes.PermissionDynamicContext	mekanism.fabric_shim.server.permission.nodes.PermissionDynamicContext
+net.neoforged.neoforgespi.language.ModFileScanData	mekanism.fabric_shim.spi.ModFileScanData
+net.neoforged.neoforgespi.language.IModFileInfo	mekanism.fabric_shim.spi.IModFileInfo
+net.neoforged.fml.loading.modscan.ModAnnotation	mekanism.fabric_shim.spi.ModAnnotation
+
+# --- Phase 1f Step 5.2: capabilities compile surface ---
+net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent	mekanism.fabric_shim.capabilities.RegisterCapabilitiesEvent
+net.neoforged.neoforge.capabilities.Capabilities	mekanism.fabric_shim.capabilities.Capabilities
+net.neoforged.neoforge.capabilities.BlockCapabilityCache	mekanism.fabric_shim.capabilities.BlockCapabilityCache
+net.neoforged.neoforge.capabilities.ICapabilityProvider	mekanism.fabric_shim.capabilities.ICapabilityProvider
+net.neoforged.neoforge.capabilities.IBlockCapabilityProvider	mekanism.fabric_shim.capabilities.IBlockCapabilityProvider
+net.neoforged.neoforge.capabilities.ICapabilityInvalidationListener	mekanism.fabric_shim.capabilities.ICapabilityInvalidationListener
+net.neoforged.fml.util.ObfuscationReflectionHelper	mekanism.fabric_shim.fml.util.ObfuscationReflectionHelper
+net.neoforged.neoforge.fluids.capability.wrappers.FluidBucketWrapper	mekanism.fabric_shim.fluids.capability.wrappers.FluidBucketWrapper
+net.neoforged.neoforge.client.settings.IKeyConflictContext	mekanism.fabric_shim.client.settings.IKeyConflictContext
+net.neoforged.neoforge.client.settings.KeyConflictContext	mekanism.fabric_shim.client.settings.KeyConflictContext
+net.neoforged.neoforge.client.settings.KeyModifier	mekanism.fabric_shim.client.settings.KeyModifier
+net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent	mekanism.fabric_shim.client.event.RegisterKeyMappingsEvent
+top.theillusivec4.curios.api.SlotContext	mekanism.fabric_shim.integration.curios.SlotContext
+top.theillusivec4.curios.api.SlotResult	mekanism.fabric_shim.integration.curios.SlotResult
+net.neoforged.neoforge.client.extensions.common.IClientItemExtensions	mekanism.fabric_shim.client.extensions.IClientItemExtensions
+net.neoforged.neoforge.client.extensions.common.IClientBlockExtensions	mekanism.fabric_shim.client.extensions.IClientBlockExtensions
+net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent	mekanism.fabric_shim.client.extensions.RegisterClientExtensionsEvent
+net.neoforged.neoforge.client.IItemDecorator	mekanism.fabric_shim.client.IItemDecorator
+net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent	mekanism.fabric_shim.client.event.RegisterItemDecorationsEvent
+
+# --- Phase 4 Step 3a: client mod-bus registration event shims ---
+net.neoforged.neoforge.client.event.EntityRenderersEvent	mekanism.fabric_shim.client.event.EntityRenderersEvent
+net.neoforged.neoforge.client.event.RegisterColorHandlersEvent	mekanism.fabric_shim.client.event.RegisterColorHandlersEvent
+net.neoforged.neoforge.client.model.geometry.IGeometryLoader	mekanism.fabric_shim.client.model.geometry.IGeometryLoader
+net.neoforged.neoforge.client.event.ModelEvent	mekanism.fabric_shim.client.event.ModelEvent
+net.neoforged.neoforge.client.event.RegisterGuiLayersEvent	mekanism.fabric_shim.client.event.RegisterGuiLayersEvent
+net.neoforged.neoforge.client.gui.VanillaGuiLayers	mekanism.fabric_shim.client.gui.VanillaGuiLayers
+net.neoforged.neoforge.client.event.RegisterMenuScreensEvent	mekanism.fabric_shim.client.event.RegisterMenuScreensEvent
+net.neoforged.neoforge.client.event.RegisterClientReloadListenersEvent	mekanism.fabric_shim.client.event.RegisterClientReloadListenersEvent
+net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent	mekanism.fabric_shim.client.event.RegisterParticleProvidersEvent
+net.neoforged.neoforge.client.event.RegisterShadersEvent	mekanism.fabric_shim.client.event.RegisterShadersEvent
+net.neoforged.neoforge.client.event.TextureAtlasStitchedEvent	mekanism.fabric_shim.client.event.TextureAtlasStitchedEvent
+net.neoforged.neoforge.client.event.sound.SoundEngineLoadEvent	mekanism.fabric_shim.client.event.sound.SoundEngineLoadEvent
+net.neoforged.neoforge.client.event.sound.PlaySoundEvent	mekanism.fabric_shim.client.event.sound.PlaySoundEvent
+
+# --- Phase 4 Step 3b: client game-bus event shims ---
+net.neoforged.neoforge.client.event.ClientTickEvent	mekanism.fabric_shim.client.event.ClientTickEvent
+net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent	mekanism.fabric_shim.client.event.ClientPlayerNetworkEvent
+net.neoforged.neoforge.client.event.InputEvent	mekanism.fabric_shim.client.event.InputEvent
+net.neoforged.neoforge.client.event.RecipesUpdatedEvent	mekanism.fabric_shim.client.event.RecipesUpdatedEvent
+net.neoforged.neoforge.client.event.RenderLivingEvent	mekanism.fabric_shim.client.event.RenderLivingEvent
+net.neoforged.neoforge.client.event.ViewportEvent	mekanism.fabric_shim.client.event.ViewportEvent
+net.neoforged.neoforge.client.event.ScreenEvent	mekanism.fabric_shim.client.event.ScreenEvent
+net.neoforged.neoforge.client.event.RenderLevelStageEvent	mekanism.fabric_shim.client.event.RenderLevelStageEvent
+net.neoforged.neoforge.client.event.RenderGuiLayerEvent	mekanism.fabric_shim.client.event.RenderGuiLayerEvent
+net.neoforged.neoforge.client.event.RenderArmEvent	mekanism.fabric_shim.client.event.RenderArmEvent
+net.neoforged.neoforge.client.event.RenderHighlightEvent	mekanism.fabric_shim.client.event.RenderHighlightEvent
+
+# --- Phase 4 Step 4: model geometry interface shims (hand-shim, no Porting Lib) ---
+net.neoforged.neoforge.client.RenderTypeGroup	mekanism.fabric_shim.client.RenderTypeGroup
+net.neoforged.neoforge.client.model.SimpleModelState	mekanism.fabric_shim.client.model.SimpleModelState
+net.neoforged.neoforge.client.model.geometry.IGeometryBakingContext	mekanism.fabric_shim.client.model.geometry.IGeometryBakingContext
+net.neoforged.neoforge.client.model.geometry.IUnbakedGeometry	mekanism.fabric_shim.client.model.geometry.IUnbakedGeometry
+net.neoforged.neoforge.client.model.geometry.StandaloneGeometryBakingContext	mekanism.fabric_shim.client.model.geometry.StandaloneGeometryBakingContext
+
+# --- Phase 4 Step 4-baked: BakedModel extension shims (MekBakedModelExt inject-interface) ---
+net.neoforged.neoforge.client.ChunkRenderTypeSet	mekanism.fabric_shim.client.ChunkRenderTypeSet
+net.neoforged.neoforge.client.model.BakedModelWrapper	mekanism.fabric_shim.client.model.BakedModelWrapper
+net.neoforged.neoforge.client.model.IDynamicBakedModel	mekanism.fabric_shim.client.model.IDynamicBakedModel
+
+# --- Phase 4 Step 4-obj: OBJ stubs + ElementsModel stub + IQuadTransformer constants ---
+net.neoforged.neoforge.client.model.obj.ObjModel	mekanism.fabric_shim.client.model.obj.ObjModel
+net.neoforged.neoforge.client.model.obj.ObjLoader	mekanism.fabric_shim.client.model.obj.ObjLoader
+net.neoforged.neoforge.client.model.ElementsModel	mekanism.fabric_shim.client.model.ElementsModel
+net.neoforged.neoforge.client.model.IQuadTransformer	mekanism.fabric_shim.client.model.IQuadTransformer
+
+# --- Phase 4 Step 4-quadbaker: QuadBakingVertexConsumer (VertexConsumer/BakedQuad ext inject-ifaces) ---
+net.neoforged.neoforge.client.model.pipeline.QuadBakingVertexConsumer	mekanism.fabric_shim.client.model.pipeline.QuadBakingVertexConsumer
+
+# --- Phase 4 Step 5f: ClientHooks (event-posting hooks) + config screen factory extension point ---
+net.neoforged.neoforge.client.ClientHooks	mekanism.fabric_shim.client.ClientHooks
+net.neoforged.neoforge.client.gui.IConfigScreenFactory	mekanism.fabric_shim.client.gui.IConfigScreenFactory
+net.neoforged.neoforge.client.model.SeparateTransformsModel	mekanism.fabric_shim.client.model.SeparateTransformsModel
+net.neoforged.neoforge.client.model.DynamicFluidContainerModel	mekanism.fabric_shim.client.model.DynamicFluidContainerModel

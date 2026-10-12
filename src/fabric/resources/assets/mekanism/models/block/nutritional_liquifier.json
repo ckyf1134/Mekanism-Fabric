@@ -1,0 +1,6 @@
+{
+  "parent": "mekanism:block/nutritional_liquifier_base",
+  "textures": {
+    "particle": "mekanism:block/nutritional_liquifier"
+  }
+}

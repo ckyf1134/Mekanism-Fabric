@@ -1,0 +1,60 @@
+{
+  "gui_light": "side",
+  "textures": {
+    "particle": "mekanism:block/models/solar_neutron_activator1",
+    "translucent_laser": "mekanism:block/laser"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        15,
+        5
+      ],
+      "to": [
+        9,
+        25,
+        7
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            2,
+            6,
+            4,
+            16
+          ],
+          "texture": "#translucent_laser"
+        },
+        "east": {
+          "uv": [
+            8,
+            6,
+            10,
+            16
+          ],
+          "texture": "#translucent_laser"
+        },
+        "south": {
+          "uv": [
+            6,
+            6,
+            8,
+            16
+          ],
+          "texture": "#translucent_laser"
+        },
+        "west": {
+          "uv": [
+            4,
+            6,
+            6,
+            16
+          ],
+          "texture": "#translucent_laser"
+        }
+      }
+    }
+  ],
+  "parent": "mekanism:block/solar_neutron_activator"
+}

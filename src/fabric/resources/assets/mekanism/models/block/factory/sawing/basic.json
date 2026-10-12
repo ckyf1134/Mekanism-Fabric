@@ -1,0 +1,6 @@
+{
+  "parent": "mekanism:block/factory/sawing/base",
+  "textures": {
+    "particle": "mekanism:block/factory/sawing/sawing_factory_front"
+  }
+}

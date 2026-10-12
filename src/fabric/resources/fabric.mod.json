@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "id": "mekanism",
+  "version": "@version@",
+  "name": "Mekanism",
+  "description": "High-tech machinery, powerful energy generation, fancy gadgets and more. Unofficial Fabric port.",
+  "authors": [
+    "Aidancbrady",
+    "Thommy101",
+    "Thiakil",
+    "pupnewfster",
+    "dizzyd"
+  ],
+  "contact": {
+    "homepage": "https://aidancbrady.com/mekanism/",
+    "issues": "https://github.com/mekanism/Mekanism/issues"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "accessWidener": "mekanism.accesswidener",
+  "mixins": [
+    "mekanism.mixins.json"
+  ],
+  "custom": {
+    "loom:injected_interfaces": {
+      "net/minecraft/class_9322": ["mekanism/fabric_shim/inject/MekDataComponentHolderExt"],
+      "net/minecraft/class_1799": ["mekanism/fabric_shim/inject/MekItemStackExt"],
+      "net/minecraft/class_1792$class_1793": ["mekanism/fabric_shim/inject/MekItemPropertiesExt"],
+      "net/minecraft/class_9323$class_9324": ["mekanism/fabric_shim/inject/MekDataComponentMapBuilderExt"],
+      "net/minecraft/class_2586$class_9473": ["mekanism/fabric_shim/inject/MekDataComponentInputExt"],
+      "net/minecraft/class_3611": ["mekanism/fabric_shim/inject/MekFluidExt"],
+      "net/minecraft/class_3610": ["mekanism/fabric_shim/inject/MekFluidStateExt"],
+      "net/minecraft/class_1297": ["mekanism/fabric_shim/inject/MekEntityExt", "mekanism/fabric_shim/inject/MekAttachmentExt"],
+      "net/minecraft/class_1792": ["mekanism/fabric_shim/inject/MekItemExt"],
+      "net/minecraft/class_2680": ["mekanism/fabric_shim/inject/MekBlockStateExt"],
+      "net/minecraft/class_2248": ["mekanism/fabric_shim/inject/MekBlockExt"],
+      "net/minecraft/class_1937": ["mekanism/fabric_shim/inject/MekLevelExt", "mekanism/fabric_shim/inject/MekAttachmentExt"],
+      "net/minecraft/class_2586": ["mekanism/fabric_shim/inject/MekBlockEntityExt"],
+      "net/minecraft/class_6880": ["mekanism/fabric_shim/inject/MekHolderExt"],
+      "net/minecraft/class_2378": ["mekanism/fabric_shim/inject/MekRegistryExt"],
+      "net/minecraft/class_1293": ["mekanism/fabric_shim/inject/MekMobEffectInstanceExt"],
+      "net/minecraft/class_1856": ["mekanism/fabric_shim/inject/MekIngredientExt"],
+      "net/minecraft/class_1735": ["mekanism/fabric_shim/inject/MekSlotExt"],
+      "net/minecraft/class_1657": ["mekanism/fabric_shim/inject/MekPlayerExt"],
+      "net/minecraft/class_1299": ["mekanism/fabric_shim/inject/MekEntityTypeExt"],
+      "net/minecraft/class_1538": ["mekanism/fabric_shim/inject/MekLightningBoltExt"],
+      "net/minecraft/class_7225$class_7874": ["mekanism/fabric_shim/inject/MekHolderLookupProviderExt"],
+      "net/minecraft/class_1761$class_7913": ["mekanism/fabric_shim/inject/MekCreativeModeTabBuilderExt"],
+      "net/minecraft/class_304": ["mekanism/fabric_shim/inject/MekKeyMappingExt"],
+      "net/minecraft/class_332": ["mekanism/fabric_shim/inject/MekGuiGraphicsExt"],
+      "net/minecraft/class_1092": ["mekanism/fabric_shim/inject/MekModelManagerExt"],
+      "net/minecraft/class_7775": ["mekanism/fabric_shim/inject/MekModelBakerExt"],
+      "net/minecraft/class_806": ["mekanism/fabric_shim/inject/MekItemOverridesExt"],
+      "net/minecraft/class_761": ["mekanism/fabric_shim/inject/MekLevelRendererExt"],
+      "net/minecraft/class_1087": ["mekanism/fabric_shim/inject/MekBakedModelExt"],
+      "net/minecraft/class_4588": ["mekanism/fabric_shim/inject/MekVertexConsumerExt"],
+      "net/minecraft/class_777": ["mekanism/fabric_shim/inject/MekBakedQuadExt"]
+    }
+  },
+  "entrypoints": {
+    "main": [
+      "mekanism.fabric.MekanismFabric"
+    ],
+    "client": [
+      "mekanism.fabric.client.MekanismFabricClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=@fabric_loader_version@",
+    "fabric-api": "*",
+    "minecraft": "=@minecraft_version@",
+    "java": ">=21"
+  }
+}

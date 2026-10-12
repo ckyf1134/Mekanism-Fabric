@@ -1,0 +1,6 @@
+{
+  "parent": "mekanism:block/factory/combining/base",
+  "textures": {
+    "particle": "mekanism:block/factory/combining/combining_factory_front"
+  }
+}

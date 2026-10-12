@@ -1,0 +1,6 @@
+{
+  "parent": "mekanism:block/factory/compressing/base",
+  "textures": {
+    "particle": "mekanism:block/factory/compressing/compressing_factory_front"
+  }
+}

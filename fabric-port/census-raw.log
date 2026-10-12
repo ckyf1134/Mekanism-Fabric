@@ -1,0 +1,17 @@
+D:\mc\MODEVS\Mekanism\src\api\java\mekanism\api\chemical\Chemical.java:17: warning: [removal] ChemicalAttributes in mekanism.api.chemical.attribute has been deprecated and marked for removal
+import mekanism.api.chemical.attribute.ChemicalAttributes.Radiation;
+                                      ^
+D:\mc\MODEVS\Mekanism\src\api\java\mekanism\api\chemical\Chemical.java:53: warning: [removal] IChemicalProvider in mekanism.api.providers has been deprecated and marked for removal
+public class Chemical implements IChemicalProvider, IChemicalAttributeContainer<Chemical> {
+                                 ^
+D:\mc\MODEVS\Mekanism\src\api\java\mekanism\api\chemical\attribute\ChemicalAttributeValidator.java:82: warning: [removal] getAttributes() in Chemical has been deprecated and marked for removal
+        for (ChemicalAttribute chemicalAttribute : chemical.getAttributes()) {
+                                                           ^
+D:\mc\MODEVS\Mekanism\src\api\java\mekanism\api\chemical\attribute\ChemicalAttributeValidator.java:82: warning: [removal] ChemicalAttribute in mekanism.api.chemical.attribute has been deprecated and marked for removal
+        for (ChemicalAttribute chemicalAttribute : chemical.getAttributes()) {
+             ^
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+4 warnings
